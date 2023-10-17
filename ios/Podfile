@@ -1,38 +1,11 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
-
 target 'Runner' do
-  # Flutter pods
+  use_frameworks!
+
+  # Specify the platform and version
+  platform :ios, '12.0' # Use the iOS version you need
+
+  # Add your CocoaPods dependencies here
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
-  pod 'GoogleSignIn'
-  pod 'FBSDKCoreKit'
-  pod 'FBSDKLoginKit'
-  pod 'FBSDKShareKit'
-
-  # Add any additional pods you need for your Flutter project here.
+  # ...other pods...
 end
-
-# Post-install setup instructions
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    # Flutter Pods
-    flutter_additional_ios_build_settings(target)
-
-    # For Firebase Dynamic Links (uncomment if you're using Firebase Dynamic Links)
-    # if target.name == 'FirebaseDynamicLinks'
-    #   target.build_configurations.each do |config|
-    #     config.build_settings['SWIFT_VERSION'] = '5.0'
-    #   end
-    # end
-  end
-end
-
-# For Firebase Dynamic Links (uncomment if you're using Firebase Dynamic Links)
-# def flutter_additional_ios_build_settings(target)
-#   target.build_configurations.each do |config|
-#     config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
-#     config.build_settings['SWIFT_VERSION'] = '5.0'
-#   end
-# end
-
