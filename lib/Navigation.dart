@@ -7,9 +7,9 @@ import 'package:untitled/ProviderData.dart';
 import 'package:untitled/main.dart';
 
 
-void main(){
-  runApp(MyApp());
-}
+// void main(){
+//   runApp(MyApp());
+// }
 
 
 

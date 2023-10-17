@@ -12,7 +12,7 @@ import 'package:easy_autocomplete/easy_autocomplete.dart';
 
 
 
-// void main() => runApp(MyApp());
+void main() => runApp(MyApp());
 
 
 extension SplayTreeMultiMapExtension<K, V> on SplayTreeMap<K, List<V>> {
