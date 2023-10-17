@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/ImageItems.dart';
 import 'package:untitled/MainSearch.dart';
 import 'package:untitled/ProviderData.dart';
 import 'package:untitled/main.dart';
@@ -43,7 +42,8 @@ void main(){
   int _selectedIndex = 0 ;
   final List<Widget> screen =[
     MyHomePage(title: 'hello',) ,
-    MainSearch()
+    MainSearch(),
+
   ];
 
   @override
