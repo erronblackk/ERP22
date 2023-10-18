@@ -44,7 +44,7 @@ dependencies:
   dio: ^4.0.0
   json_annotation: ^4.0.1
   provider: ^5.0.0
-  camera: ^0.8.0
+#  camera: ^0.8.0
 
 
 dev_dependencies:
