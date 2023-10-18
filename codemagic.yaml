@@ -1,0 +1,38 @@
+# codemagic.yaml
+
+# ... (previous configuration)
+
+workflows:
+  deploy-ios:
+    name: Deploy to iOS
+    on:
+      push:
+        branches:
+          - main
+    scripts:
+      - name: Install Flutter
+        script: |
+          flutter pub get
+      - name: Set up Code Signing
+        script: |
+          echo "$IOS_CERTIFICATE" > ios-cert.pem
+          echo "$IOS_KEY" > ios-key.pem
+          echo "$IOS_PROVISIONING_PROFILE" > ios-profile.mobileprovision
+          security create-keychain -p "wiss4490A$" ios-build.keychain
+          security import ios-cert.pem -k ~/Library/Keychains/ios-build.keychain -P "YourCertificatePassword" -T /usr/bin/codesign
+          security import ios-key.pem -k ~/Library/Keychains/ios-build.keychain -P "YourKeyPassword" -T /usr/bin/codesign
+          security list-keychains -s ~/Library/Keychains/ios-build.keychain
+          security default-keychain -s ios-build.keychain
+          security unlock-keychain -p "YourKeychainPassword" ~/Library/Keychains/ios-build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "YourKeychainPassword" ~/Library/Keychains/ios-build.keychain
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp ios-profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+      - name: Build iOS App
+        script: |
+          flutter build ios --release --no-codesign
+      - name: Deploy to Firebase
+        script: |
+          # Add deployment commands here
+          # Example: Upload the iOS app to Firebase App Distribution
+          # Replace <APP_ID> and <TOKEN> with your Firebase project ID and API token
+          firebase appdistribution:distribute <APP_ID> --token <TOKEN> --release-notes "Release notes for iOS"
