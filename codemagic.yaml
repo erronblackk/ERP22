@@ -4,7 +4,7 @@
 
 workflows:
   deploy-ios:
-    name: Deploy to iOS
+    name: "untitled"
     on:
       push:
         branches:
