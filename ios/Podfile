@@ -8,5 +8,4 @@ target 'Runner' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
   # ...other pods...
-  pod 'camera', :path => '../'
 end
