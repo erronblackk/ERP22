@@ -1,10 +1,7 @@
-# codemagic.yaml
-
-# ... (previous configuration)
 
 workflows:
   deploy-ios:
-    name: untitled
+    name: Deploy to iOS
     on:
       push:
         branches:
