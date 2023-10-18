@@ -1,3 +1,6 @@
+# codemagic.yaml
+
+# ... (previous configuration)
 
 workflows:
   deploy-ios:
