@@ -1,28 +1,45 @@
-# codemagic.yaml
-
-# ... (previous configuration)
-
 workflows:
-  deploy-ios:
-    name: Deploy to iOS
+  flutter-app:
+    name: Flutter App Build
+    environment:
+      flutter: stable
+      vars:
+        # Specify your environment variables here
+        CM_CERTIFICATE: Encrypted(...) # Encrypted Apple Certificate
+        CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted Certificate Password
+        CM_PROVISIONING_PROFILE: Encrypted(...) # Encrypted Provisioning Profile
+    triggering:
+      events:
+        - push
     scripts:
-      - name: Install Flutter
+      - name: Install dependencies
         script: |
           flutter pub get
-      - name: Set up Code Signing
+      - name: Run tests
         script: |
-          echo "$IOS_CERTIFICATE" > ios-cert.pem
-          echo "$IOS_KEY" > ios-key.pem
-          echo "$IOS_PROVISIONING_PROFILE" > ios-profile.mobileprovision
-          security create-keychain -p "wiss4490A" ios-build.keychain
-          security import ios-cert.pem -k ~/Library/Keychains/ios-build.keychain -P "TTgFY3nU" -T /usr/bin/codesign
-          security import ios-key.pem -k ~/Library/Keychains/ios-build.keychain -P "wiss4490A" -T /usr/bin/codesign
-          security list-keychains -s ~/Library/Keychains/ios-build.keychain
-          security default-keychain -s ios-build.keychain
-          security unlock-keychain -p "wiss4490A" ~/Library/Keychains/ios-build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k "wiss4490A" ~/Library/Keychains/ios-build.keychain
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles/
-          cp ios-profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-     
-        
+          flutter test
+      - name: Build IPA
+        script: |
+          flutter build ios --release
+      - name: Set up keychain
+        script: |
+          keychain initialize
+      - name: Add signing certificate to keychain
+        script: |
+          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
+      - name: Set up provisioning profiles
+        script: |
+          keychain add-provisioning-profiles --provisioning-profile /tmp/profile.mobileprovision
+      - name: Export IPA
+        script: |
+          xcode-project use-profiles
+          xcode-project build-ipa --workspace ios/Runner.xcworkspace --scheme Runner
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        apple_id: "jonnywcage@gamil.com"
+        # Encrypted App Specific Password
+        submit_to_testflight: true # Optional: Set to true if you want to submit to TestFlight
+
       
