@@ -5,10 +5,6 @@
 workflows:
   deploy-ios:
     name: Deploy to iOS
-    on:
-      push:
-        branches:
-          - main
     scripts:
       - name: Install Flutter
         script: |
