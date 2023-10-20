@@ -1,29 +1,38 @@
 workflows:
-  my-workflow:
+  ios-release:
+    name: iOS Release
+    environment:
+      vars:
+        CM_CERTIFICATE: Encrypted(...) # Use the actual env variable name from Codemagic
+        CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted password for your certificate
+        CM_PROVISIONING_PROFILE: Encrypted(...) # Use the actual env variable name from Codemagic
+      flutter: stable # or your desired Flutter version
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
     scripts:
-      - name: Add provisioning profiles
+      - name: Fetch code signing files
         script: |
-          set -e # exit on first failed command
-
-          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILES_HOME"
-          echo ${PROVISIONING_PROFILE?} | base64 --decode > "$PROFILES_HOME/$(uuidgen).mobileprovision"
-      - name: Add signing certificate
+          app-store-connect fetch-signing-files $YOUR_APPLE_APP_ID --type IOS_APP_STORE
+          keychain add-certificates
+      - name: Set up provisioning profiles
         script: |
-          set -e # exit on first failed command
-
-          echo ${CERTIFICATE?} | base64 --decode > /tmp/certificate.p12
-          keychain initialize
-          keychain add-certificates \
-              --certificate /tmp/certificate.p12 \
-              --certificate-password ${CERTIFICATE_PASSWORD?}
-      - name: Increment build number
-        script: agvtool new-version -all $BUILD_NUMBER
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
-      - name: Build ipa for distribution
-        script: xcode-project build-ipa \
-          --workspace "${XCODE_WORKSPACE?}" \
-          --scheme "${XCODE_SCHEME?}"
+          keychain add-provisioning-profiles
+      - name: Build ipa
+        script: |
+          flutter build ios --release --build-number=$(git rev-list HEAD --count)
+          cd ios
+          xcode-project package-ipa --workspace ios/Runner.xcworkspace --scheme Runner
     artifacts:
       - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        apple_id: your@email.com # Your Apple email
+        app_specific_password: Encrypted(...) # Your app-specific password
+        app_store_connect_api_key:
+          key_id: YOUR_KEY_ID
+          issuer_id: YOUR_ISSUER_ID
+          private_key: Encrypted(...) # The private key for App Store Connect API
+        application_id: YOUR_APPLE_APP_ID
