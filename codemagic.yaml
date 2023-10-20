@@ -2,6 +2,8 @@ workflows:
   ios-release:
     name: iOS Release
     environment:
+      groups:
+        - appstore_credentials
       vars:
         CM_CERTIFICATE: Encrypted(...) # Use the actual env variable name from Codemagic
         CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted password for your certificate
