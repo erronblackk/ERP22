@@ -40,6 +40,4 @@ workflows:
       app_store_connect:
         apple_id: "jonnywcage@gamil.com"
         # Encrypted App Specific Password
-        submit_to_testflight: true # Optional: Set to true if you want to submit to TestFlight
-
-      
+        
