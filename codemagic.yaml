@@ -3,7 +3,7 @@ workflows:
     name: iOS Release
     environment:
       groups:
-        - appstore_credential
+        - appstore_credentials
       vars:
         CM_CERTIFICATE: Encrypted(...) # Use the actual env variable name from Codemagic
         CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted password for your certificate
@@ -33,4 +33,3 @@ workflows:
       app_store_connect:
         apple_id: jonnywcage@gmail.com # Your Apple email
         # Your app-specific password
-        
