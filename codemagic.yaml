@@ -1,44 +1,32 @@
 workflows:
-  flutter-app:
-    name: Flutter App Build
+  ios-release:
+    name: iOS Release
     environment:
-            groups:
-              - appstore_credential
-      flutter: stable
       vars:
-        # Specify your environment variables here
-        CM_CERTIFICATE: Encrypted(...) # Encrypted Apple Certificate
-        CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted Certificate Password
-        CM_PROVISIONING_PROFILE: Encrypted(...) # Encrypted Provisioning Profile
+        CM_CERTIFICATE: Encrypted(...) # Use the actual env variable name from Codemagic
+        CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted password for your certificate
+        CM_PROVISIONING_PROFILE: Encrypted(...) # Use the actual env variable name from Codemagic
+      flutter: stable # or your desired Flutter version
+      xcode: latest
+      cocoapods: default
     triggering:
       events:
         - push
     scripts:
-      - name: Install dependencies
+      - name: Fetch code signing files
         script: |
-          flutter pub get
-      - name: Run tests
-        script: |
-          flutter test
-      - name: Build IPA
-        script: |
-          flutter build ios --release
-      - name: Set up keychain
-        script: |
-          keychain initialize
-      - name: Add signing certificate to keychain
-        script: |
-          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password $CM_CERTIFICATE_PASSWORD
+          app-store-connect fetch-signing-files $YOUR_APPLE_APP_ID --type IOS_APP_STORE
+          keychain add-certificates
       - name: Set up provisioning profiles
         script: |
-          keychain add-provisioning-profiles --provisioning-profile /tmp/profile.mobileprovision
-      - name: Export IPA
+          keychain add-provisioning-profiles
+      - name: Build ipa
         script: |
-          xcode-project use-profiles
-          xcode-project build-ipa --workspace ios/Runner.xcworkspace --scheme Runner
+          flutter build ios --release --build-number=$(git rev-list HEAD --count)
+          cd ios
+          xcode-project package-ipa --workspace ios/Runner.xcworkspace --scheme Runner
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        apple_id: jonnywcage@gmail.com
-        submit_to_testflight: true # Optional: Set to true if you want to submit to TestFlight
+        apple_id: jonnywcage@gmail.com # Your Apple email
