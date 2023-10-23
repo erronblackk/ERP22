@@ -10,7 +10,7 @@ workflows:
         CM_PROVISIONING_PROFILE: $CM_PROVISIONING_PROFILE # Use the actual env variable name from Codemagic
         APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID
         APP_STORE_CONNECT_KEY_IDENTIFIER: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        PRIVATE_KEY: $PRIVATE_KEY
+        APP_STORE_CONNECT_PRIVATE_KEY: $APP_STORE_CONNECT_PRIVATE_KEY
       flutter: stable # or your desired Flutter version
       xcode: latest
       cocoapods: default
