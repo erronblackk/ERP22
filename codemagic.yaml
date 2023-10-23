@@ -9,7 +9,7 @@ workflows:
         CM_CERTIFICATE_PASSWORD: $CM_CERTIFICATE_PASSWORD # Encrypted password for your certificate
         CM_PROVISIONING_PROFILE: $CM_PROVISIONING_PROFILE # Use the actual env variable name from Codemagic
         APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID
-        APP_KEY_ID: $APP_KEY_ID
+        APP_STORE_CONNECT_KEY_IDENTIFIER: APP_STORE_CONNECT_KEY_IDENTIFIER
       flutter: stable # or your desired Flutter version
       xcode: latest
       cocoapods: default
