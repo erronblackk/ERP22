@@ -5,9 +5,9 @@ workflows:
       groups:
         - appstore_credentials
       vars:
-        CM_CERTIFICATE: Encrypted(...) # Use the actual env variable name from Codemagic
-        CM_CERTIFICATE_PASSWORD: Encrypted(...) # Encrypted password for your certificate
-        CM_PROVISIONING_PROFILE: Encrypted(...) # Use the actual env variable name from Codemagic
+        CM_CERTIFICATE: $CM_CERTIFICATE # Use the actual env variable name from Codemagic
+        CM_CERTIFICATE_PASSWORD: $CM_CERTIFICATE_PASSWORD # Encrypted password for your certificate
+        CM_PROVISIONING_PROFILE: $CM_PROVISIONING_PROFILE # Use the actual env variable name from Codemagic
       flutter: stable # or your desired Flutter version
       xcode: latest
       cocoapods: default
