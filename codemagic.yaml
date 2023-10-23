@@ -17,7 +17,7 @@ workflows:
     scripts:
       - name: Fetch code signing files
         script: |
-          app-store-connect fetch-signing-files $YOUR_APPLE_APP_ID --type IOS_APP_STORE
+          app-store-connect fetch-signing-files "jonnywcage@gmail.com" --type IOS_APP_STORE
           keychain add-certificates
       - name: Set up provisioning profiles
         script: |
